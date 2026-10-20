@@ -24,21 +24,41 @@ From the ACMElabs marketplace, the documented route:
 /plugin install jev-gate@acmelabs
 ```
 
-Then put a TypeSafe key in the `env` block of `~/.claude/settings.json` and restart Claude Code:
+The install asks for a **TypeSafe API key**. If you don't have one yet, leave it empty and follow [Get a TypeSafe API key](#get-a-typesafe-api-key). Without a key, every call is logged as `skipped`, and each new session opens with a one-line reminder.
 
-```json
-{ "env": { "JEV_API_KEY": "<your key>" } }
-```
-
-Get a key at [console.typesafe.ai](https://console.typesafe.ai). Without one, every call is logged as `skipped` and nothing else happens.
+Not sure what to do? Ask Claude "how do I set up jev-gate?". The plugin ships a `jev-gate:setup` skill that explains Jev, walks you through the signup, and checks the result.
 
 To run it from a clone instead, add the clone as its own marketplace with `/plugin marketplace add <path to the clone>` and install `jev-gate@jev-gate`. `settings.example.json` shows the same hook wired straight into settings, with no plugin.
+
+## Get a TypeSafe API key
+
+Jev is a decision model from [TypeSafe AI](https://typesafe.ai). It returns probabilities instead of text, in about 70 to 500 ms. jev-gate calls it once per gated tool call, so it needs your own TypeSafe account and key.
+
+1. **Sign up.** Go to [console.typesafe.ai](https://console.typesafe.ai) and sign in with Google or an email code. There's no password.
+2. **Add billing if asked.** TypeSafe suspended its $5 free credit for new accounts in late September 2026, so the console may ask for a card. A low spending limit, such as $5 or $10, is plenty.
+3. **Create a key.** Open **API Keys**, create a key named something like `jev-gate`, and copy it at once. It may be shown only once.
+4. **Store it.** Pick one:
+
+   | Where | How | Notes |
+   | --- | --- | --- |
+   | The plugin's configure dialog (recommended) | Run `/plugin configure jev-gate@acmelabs`, or open `/plugin`, select jev-gate on the **Installed** tab, and choose **Configure**. Paste the key into **TypeSafe API key**. | Masked input. Claude Code keeps the key in secure storage, not in `settings.json`. |
+   | `~/.claude/settings.json` | Add `"JEV_API_KEY": "<your key>"` inside the `"env"` block. If the file already has an `"env"` block, add the line inside it; a second `"env"` block replaces the first. | Plain text. Use it where the dialog isn't available. |
+
+   When both are set, the dialog's key wins.
+
+5. **Check it.** Restart Claude Code, run any command, then read the report (see [Read the log](#read-the-log)). `scored` should go up. An `HTTP 401` or `403` error means TypeSafe rejected the key.
+
+**What it costs.** $0.042 per million input tokens, and output tokens are free (TypeSafe's published rates, October 2026). Each gated call sends about 1,000 to 2,000 tokens, so 1,000 calls a day cost about $2 a month.
+
+**Don't paste the key into a chat.** A key in a transcript counts as exposed. If that happens, revoke it on the API Keys page and create a new one.
+
+**No TypeSafe account?** Vercel's AI Gateway serves Jev too: set `JEV_BASE_URL` to `https://ai-gateway.vercel.sh/typesafe`, `JEV_MODEL` to `typesafe-ai/jev`, and `JEV_API_KEY` to your AI Gateway key. Or run a local `/v1/systemone` server such as Kev, which needs no key at all.
 
 ## Configuration
 
 | Variable | Default | What it does |
 | --- | --- | --- |
-| `JEV_API_KEY` | — | TypeSafe key (`TYPESAFE_API_KEY` also works). With no key against the hosted API, calls are logged as `skipped`. |
+| `JEV_API_KEY` | — | TypeSafe key (`TYPESAFE_API_KEY` also works). The key from the configure dialog wins over both. With no key against the hosted API, calls are logged as `skipped`. |
 | `JEV_BASE_URL` | `https://api.typesafe.ai` | Any `/v1/systemone` server: hosted Jev, a gateway (OpenRouter, Vercel), or a local Kev server. |
 | `JEV_MODEL` | `jev-latest` | The model name sent in the request. |
 | `JEV_GATE_MODE` | `shadow` | `shadow` logs only. `enforce` acts on a flag. |
@@ -49,6 +69,8 @@ To run it from a clone instead, add the clone as its own marketplace with `/plug
 | `JEV_GATE_MAX_FIELD` | `4000` | Characters kept per string sent to Jev, such as file contents in `Write`. |
 
 ## Read the log
+
+Installed from the marketplace: ask Claude to "show the jev-gate report", or run `/jev-gate:report`. The `jev-gate:report` skill runs the report script that ships with the plugin and walks through the results. Add a time span or a count to the request, such as "for the last 7 days" or "top 30".
 
 From a clone of this repo:
 

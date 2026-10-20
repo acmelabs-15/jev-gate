@@ -124,6 +124,17 @@ describe("render", () => {
   });
 });
 
+describe("the report skill", () => {
+  test("runs this script through the plugin root", async () => {
+    const skill = await Bun.file(
+      path.join(import.meta.dir, "..", "..", "..", "skills", "report", "SKILL.md"),
+    ).text();
+    expect(skill).toMatch(/^---\nname: report\ndescription: /u);
+    expect(skill).toContain(`\${CLAUDE_PLUGIN_ROOT}/scripts/report/report.ts`);
+    expect(await Bun.file(REPORT).exists()).toBe(true);
+  });
+});
+
 describe("the command", () => {
   test("--json prints the summary and --log picks the file", async () => {
     const dir = await mkdtemp(path.join(tmpdir(), "jev-gate-report-"));
