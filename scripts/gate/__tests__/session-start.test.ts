@@ -59,7 +59,7 @@ describe("the hook", () => {
     const hooks = await Bun.file(path.join(ROOT, "hooks", "hooks.json")).json();
     const [entry] = hooks.hooks.SessionStart;
     expect(entry.matcher).toBe("startup");
-    expect(entry.hooks[0].args).toEqual([`${PLUGIN_ROOT}/scripts/gate/session-start.ts`]);
+    expect(entry.hooks[0].command).toBe(`bun "${PLUGIN_ROOT}/scripts/gate/session-start.ts"`);
   });
 });
 

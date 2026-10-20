@@ -7,10 +7,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bun",
-            "args": [
-              "${CLAUDE_PLUGIN_ROOT}/scripts/gate/hook.ts"
-            ],
+            "command": "bun \"${CLAUDE_PLUGIN_ROOT}/scripts/gate/hook.ts\"",
             "timeout": 5
           }
         ]
@@ -22,10 +19,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bun",
-            "args": [
-              "${CLAUDE_PLUGIN_ROOT}/scripts/gate/session-start.ts"
-            ],
+            "command": "bun \"${CLAUDE_PLUGIN_ROOT}/scripts/gate/session-start.ts\"",
             "timeout": 5
           }
         ]

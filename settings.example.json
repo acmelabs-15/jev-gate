@@ -13,8 +13,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bun",
-            "args": ["/ABSOLUTE/PATH/TO/jev-gate/scripts/gate/hook.ts"],
+            "command": "bun \"/ABSOLUTE/PATH/TO/jev-gate/scripts/gate/hook.ts\"",
             "timeout": 5
           }
         ]
