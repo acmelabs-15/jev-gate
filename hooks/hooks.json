@@ -1,5 +1,5 @@
 {
-  "description": "Jev gate: score side-effecting tool calls before they run (shadow mode by default).",
+  "description": "jev-gate: score side-effecting tool calls before they run (shadow mode by default).",
   "hooks": {
     "PreToolUse": [
       {
@@ -8,7 +8,7 @@
           {
             "type": "command",
             "command": "bun",
-            "args": ["${CLAUDE_PLUGIN_ROOT}/hook.ts"],
+            "args": ["${CLAUDE_PLUGIN_ROOT}/scripts/gate/hook.ts"],
             "timeout": 5
           }
         ]
