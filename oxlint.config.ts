@@ -7,7 +7,8 @@ export default defineConfig({
   extends: [core],
   ignorePatterns: [...core.ignorePatterns],
   rules: {
-    // Function declarations hoist, so a file reads top-down with helpers below their callers.
+    // Function declarations, not arrow constants, with helpers above their callers:
+    // Ultracite's no-use-before-define requires that order.
     "func-style": "off",
     // Object keys are ordered by meaning: the log record's fields, a question's type before its text.
     "sort-keys": "off",
