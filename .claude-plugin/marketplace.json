@@ -9,7 +9,7 @@
   "plugins": [
     {
       "name": "jev-gate",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "source": "./",
       "description": "A PreToolUse gate: Jev scores each side-effecting tool call for destructive, exfiltration, secrets and off-task risk. Shadow mode logs only.",
       "license": "MIT"
