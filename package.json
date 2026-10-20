@@ -1,6 +1,6 @@
 {
   "name": "@acmelabs/jev-gate",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "A Claude Code PreToolUse gate: Jev scores each side-effecting tool call before it runs. Shadow mode logs only.",
   "type": "module",
