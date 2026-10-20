@@ -62,7 +62,7 @@ Jev is a decision model from [TypeSafe AI](https://typesafe.ai). It returns prob
 | `JEV_BASE_URL` | `https://api.typesafe.ai` | Any `/v1/systemone` server: hosted Jev, a gateway (OpenRouter, Vercel), or a local Kev server. |
 | `JEV_MODEL` | `jev-latest` | The model name sent in the request. |
 | `JEV_GATE_MODE` | `shadow` | `shadow` logs only. `enforce` acts on a flag. |
-| `JEV_GATE_ON_FLAG` | `ask` | In enforce mode: `ask` prompts you; `deny` sends the agent back with the reason. Use `deny` for headless or autonomous runs, where `ask` would wait for a human. |
+| `JEV_GATE_ON_FLAG` | `ask` | In enforce mode: `ask` prompts you; `deny` sends the agent back with the reason. Use `deny` for headless or autonomous runs, where `ask` would wait for a human. Use `deny` in Cursor too: Cursor does not enforce `ask` for `preToolUse` ([Cursor hooks](https://cursor.com/docs/hooks)). |
 | `JEV_GATE_THRESHOLD` | `0.9` | A blocking signal at or above this counts as a flag. |
 | `JEV_TIMEOUT_MS` | `1500` | The limit per call. On a timeout the call goes ahead and an error is logged. |
 | `JEV_GATE_LOG` | `~/.claude/jev-gate/log.jsonl` | Where the log goes. |
