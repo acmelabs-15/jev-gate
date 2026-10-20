@@ -1,5 +1,5 @@
 {
-  "description": "jev-gate: score side-effecting tool calls before they run (shadow mode by default).",
+  "description": "jev-gate: score side-effecting tool calls before they run (shadow mode by default), and say at session start when no API key is set.",
   "hooks": {
     "PreToolUse": [
       {
@@ -8,7 +8,24 @@
           {
             "type": "command",
             "command": "bun",
-            "args": ["${CLAUDE_PLUGIN_ROOT}/scripts/gate/hook.ts"],
+            "args": [
+              "${CLAUDE_PLUGIN_ROOT}/scripts/gate/hook.ts"
+            ],
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bun",
+            "args": [
+              "${CLAUDE_PLUGIN_ROOT}/scripts/gate/session-start.ts"
+            ],
             "timeout": 5
           }
         ]
