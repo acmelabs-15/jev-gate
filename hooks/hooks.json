@@ -1,0 +1,18 @@
+{
+  "description": "Jev gate: score side-effecting tool calls before they run (shadow mode by default).",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "^(Bash|Write|Edit|MultiEdit|NotebookEdit|WebFetch)$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bun",
+            "args": ["${CLAUDE_PLUGIN_ROOT}/hook.ts"],
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

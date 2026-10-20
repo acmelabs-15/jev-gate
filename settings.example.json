@@ -1,0 +1,24 @@
+{
+  "env": {
+    "JEV_API_KEY": "ts-...",
+    "JEV_GATE_MODE": "shadow",
+    "JEV_GATE_THRESHOLD": "0.9",
+    "JEV_GATE_ON_FLAG": "ask",
+    "JEV_TIMEOUT_MS": "1500"
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "^(Bash|Write|Edit|MultiEdit|NotebookEdit|WebFetch)$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bun",
+            "args": ["/ABSOLUTE/PATH/TO/jev-gate/hook.ts"],
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

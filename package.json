@@ -1,0 +1,17 @@
+{
+  "name": "jev-gate",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Claude Code PreToolUse gate backed by Jev (TypeSafe System One) or a compatible local server. Pure Bun, no runtime dependencies.",
+  "scripts": {
+    "test": "bun test",
+    "typecheck": "tsc -p .",
+    "report": "bun report.ts"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/bun": "^1.4.3",
+    "typescript": "^7.0.2"
+  }
+}

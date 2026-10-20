@@ -1,0 +1,5 @@
+{
+  "name": "jev-gate",
+  "version": "0.1.0",
+  "description": "PreToolUse gate that asks Jev (or a local Kev server) whether a tool call is destructive, leaks data, touches secrets, or wanders off task. Shadow mode by default: logs only."
+}

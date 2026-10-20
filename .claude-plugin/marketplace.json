@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "jev-gate",
+  "description": "jev-gate, installed straight from its own folder.",
+  "owner": {
+    "name": "Peter Kloss",
+    "email": "pkloss@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "jev-gate",
+      "version": "0.1.0",
+      "source": "./",
+      "description": "PreToolUse gate that asks Jev (or a local Kev server) whether a tool call is destructive, leaks data, touches secrets, or wanders off task. Shadow mode by default.",
+      "license": "MIT"
+    }
+  ]
+}
