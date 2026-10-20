@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
   "name": "jev-gate",
-  "description": "jev-gate, installed straight from its own folder.",
+  "description": "jev-gate, installed straight from its own repository. The ACMElabs marketplace is the documented route.",
   "owner": {
     "name": "Peter Kloss",
     "email": "pkloss@gmail.com"
@@ -11,7 +11,7 @@
       "name": "jev-gate",
       "version": "0.1.0",
       "source": "./",
-      "description": "PreToolUse gate that asks Jev (or a local Kev server) whether a tool call is destructive, leaks data, touches secrets, or wanders off task. Shadow mode by default.",
+      "description": "A PreToolUse gate: Jev scores each side-effecting tool call for destructive, exfiltration, secrets and off-task risk. Shadow mode logs only.",
       "license": "MIT"
     }
   ]

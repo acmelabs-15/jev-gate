@@ -1,0 +1,123 @@
+name: Release
+
+# Changesets versions the plugin; this workflow tags it, the way acmelabs-15/brain does.
+#
+# On a push to main with pending changesets, changesets/action opens a pull request
+# named `ci: Version Packages`. That pull request bumps the version, rewrites
+# CHANGELOG.md, and runs version:sync so both manifests in .claude-plugin/ agree.
+#
+# Merging it lands a commit with no changesets left. This workflow then cuts:
+#
+#   v<version>  the immutable tag for that version
+#   latest      a moving tag the ACMElabs marketplace follows
+#
+# A pre-release version, one carrying a hyphen, does not move `latest`.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.4.0"
+
+      - name: Install
+        run: bun install --frozen-lockfile
+
+      - name: Check the version is consistent
+        run: bun run version:sync -- --check
+
+      - name: Run checks
+        run: bun run check
+
+      - name: Changesets
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          version: bun run version
+          commit: "ci: Version Packages"
+          title: "ci: Version Packages"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Read the version
+        if: steps.changesets.outputs.hasChangesets == 'false'
+        id: v
+        run: |
+          set -euo pipefail
+          version=$(bun -e 'console.log((await Bun.file("package.json").json()).version)')
+          case "$version" in
+            *-*) prerelease=true ;;
+            *)   prerelease=false ;;
+          esac
+          {
+            echo "version=$version"
+            echo "tag=v$version"
+            echo "prerelease=$prerelease"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Stop if the tag already exists
+        if: steps.changesets.outputs.hasChangesets == 'false'
+        id: exists
+        run: |
+          set -euo pipefail
+          if git ls-remote --exit-code --tags origin "refs/tags/${{ steps.v.outputs.tag }}" >/dev/null 2>&1; then
+            echo "::notice::${{ steps.v.outputs.tag }} is already released. Nothing to do."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create the release
+        if: steps.exists.outputs.skip == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if [ "${{ steps.v.outputs.prerelease }}" = "true" ]; then
+            flag=--prerelease
+          else
+            flag=--latest
+          fi
+          notes=$(bun run scripts/release/release-notes.ts "${{ steps.v.outputs.version }}")
+          gh release create "${{ steps.v.outputs.tag }}" \
+            --target "$GITHUB_SHA" \
+            --title "${{ steps.v.outputs.tag }}" \
+            --notes "$notes" "$flag"
+
+      - name: Move latest
+        if: steps.exists.outputs.skip == 'false' && steps.v.outputs.prerelease == 'false'
+        run: |
+          set -euo pipefail
+          git tag -f latest "$GITHUB_SHA"
+          git push -f origin refs/tags/latest
+
+      - name: Say what happened
+        if: steps.exists.outputs.skip == 'false'
+        run: |
+          if [ "${{ steps.v.outputs.prerelease }}" = "true" ]; then
+            echo "::notice::Released ${{ steps.v.outputs.tag }} as a pre-release. latest did not move."
+          else
+            echo "::notice::Released ${{ steps.v.outputs.tag }}. latest now points at $GITHUB_SHA."
+          fi

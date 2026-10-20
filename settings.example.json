@@ -14,7 +14,7 @@
           {
             "type": "command",
             "command": "bun",
-            "args": ["/ABSOLUTE/PATH/TO/jev-gate/hook.ts"],
+            "args": ["/ABSOLUTE/PATH/TO/jev-gate/scripts/gate/hook.ts"],
             "timeout": 5
           }
         ]
